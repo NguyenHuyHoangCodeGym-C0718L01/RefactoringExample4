@@ -1,61 +1,87 @@
 public class TennisGame {
 
-    public static String getScore(String player1Name, String player2Name, int m_score1, int m_score2) {
-        String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                    score = "Love-All";
-                    break;
-                case 1:
-                    score = "Fifteen-All";
-                    break;
-                case 2:
-                    score = "Thirty-All";
-                    break;
-                case 3:
-                    score = "Forty-All";
-                    break;
-                default:
-                    score = "Deuce";
-                    break;
+    public static final int LOVESCORE = 0;
+    public static final int FIFTEENSCORE = 1;
+    public static final int THIRTYSCORE = 2;
+    public static final int FORTYSCORE = 3;
 
-            }
-        }
-        else if (m_score1>=4 || m_score2>=4)
+    public static String getScore(int firstPlayerScore, int secondPlayerScore) {
+
+        boolean checkEqualScoreTwoPlayer = firstPlayerScore==secondPlayerScore;
+
+        boolean checkScoreGreaterThanForty = firstPlayerScore >= 4 || secondPlayerScore >=4;
+
+        if (checkEqualScoreTwoPlayer)
         {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+            return handlerEqualScoreBetweenTwoPlayers(firstPlayerScore, secondPlayerScore);
+        }
+        else if (checkScoreGreaterThanForty)
+        {
+            return handlerScoreGreaterThanForty(firstPlayerScore, secondPlayerScore);
         }
         else
         {
-            for (int i=1; i<3; i++)
+            return handlerScoreSmallerThanForty(firstPlayerScore, secondPlayerScore);
+        }
+    }
+
+    public static String handlerEqualScoreBetweenTwoPlayers(int firstPlayerScore, int secondPlayerScore){
+        switch (firstPlayerScore)
+        {
+            case LOVESCORE:
+                return  "Love-All";
+            case FIFTEENSCORE:
+                return  "Fifteen-All";
+            case THIRTYSCORE:
+                return  "Thirty-All";
+            case FORTYSCORE:
+                return  "Forty-All";
+            default:
+                return  "Deuce";
+        }
+    }
+
+    public static String handlerScoreGreaterThanForty(int firstPlayerScore, int secondPlayerScore){
+        int resultBetweenTwoPlayers = firstPlayerScore-secondPlayerScore;
+
+        boolean checkFirstPlayerScoreGreaterThanSecondPlayerScore = resultBetweenTwoPlayers == 1;
+
+        boolean checkFirstPlayerScoreSmallerThanSecondPlayerScore = resultBetweenTwoPlayers == -1;
+
+        boolean checkFirstPlayerScoreGreaterThanSecondPlayerScoreTwoPoints = resultBetweenTwoPlayers >= 2;
+
+        if (checkFirstPlayerScoreGreaterThanSecondPlayerScore) return "Advantage player1";
+
+        else if (checkFirstPlayerScoreSmallerThanSecondPlayerScore) return "Advantage player2";
+
+        else if (checkFirstPlayerScoreGreaterThanSecondPlayerScoreTwoPoints) return "Win for player1";
+
+        else return "Win for player2";
+    }
+
+    public static String handlerScoreSmallerThanForty(int firstPlayerScore, int secondPlayerScore){
+        int tempScore = 0;
+        String scoreCall = "";
+        for (int i=1; i<3; i++)
+        {
+            if (i==1) tempScore = firstPlayerScore;
+            else { scoreCall+="-"; tempScore = secondPlayerScore;}
+            switch(tempScore)
             {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
+                case LOVESCORE:
+                    scoreCall+="Love";
+                    break;
+                case FIFTEENSCORE:
+                    scoreCall+="Fifteen";
+                    break;
+                case THIRTYSCORE:
+                    scoreCall+="Thirty";
+                    break;
+                case FORTYSCORE:
+                    scoreCall+="Forty";
+                    break;
             }
         }
-        return score;
+        return scoreCall;
     }
 }
